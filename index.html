@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Synergy Spheres 3.0 - Legal Sentiment Analyzer - Analyze legal statements for sentiment using AI." />
+  <title>Synergy Spheres 3.0 | Legal Sentiment Analyzer</title>
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@600&family=Roboto&display=swap" rel="stylesheet">
+  <style>
+    body {
+      font-family: 'Roboto', sans-serif;
+      background-color: #f4f4f4;
+      color: #333;
+      margin: 0;
+      padding: 0;
+    }
+    header {
+      background-color: #0a0a0a;
+      color: #00ffe1;
+      padding: 2rem 1rem;
+      text-align: center;
+      border-bottom: 4px solid #00ffe1;
+    }
+    header h1 {
+      font-family: 'Orbitron', sans-serif;
+      font-size: 2.2rem;
+      margin: 0;
+      letter-spacing: 1px;
+    }
+    header p {
+      font-size: 1.1rem;
+      color: #ccc;
+    }
+    section {
+      max-width: 800px;
+      margin: 2rem auto;
+      padding: 1rem;
+      background-color: white;
+      border-radius: 12px;
+      box-shadow: 0 0 20px rgba(0,0,0,0.08);
+    }
+    section h2 {
+      font-size: 1.5rem;
+      margin-bottom: 1rem;
+      color: #0a0a0a;
+    }
+    textarea {
+      width: 100%;
+      padding: 1rem;
+      font-size: 1rem;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+      margin-bottom: 1rem;
+      resize: vertical;
+    }
+    button {
+      background-color: #00bfa6;
+      color: white;
+      padding: 0.75rem 1.5rem;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 1rem;
+    }
+    .result {
+      margin-top: 1rem;
+      font-weight: bold;
+    }
+    footer {
+      text-align: center;
+      padding: 2rem;
+      font-size: 0.9rem;
+      color: #777;
+      background-color: #0a0a0a;
+      color: #00ffe1;
+    }
+    footer a {
+      color: #00ffe1;
+      text-decoration: none;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>⚖️ Legal Sentiment Analyzer</h1>
+    <p>By Synergy Spheres 3.0</p>
+  </header>
+
+  <section>
+    <h2>🔍 Try it Now</h2>
+    <textarea id="legalInput" rows="6" placeholder="Enter a legal sentence or paragraph..."></textarea>
+    <button onclick="analyzeSentiment()">Analyze</button>
+    <div class="result" id="result"></div>
+  </section>
+
+  <section>
+  <h2>📌 About This Tool</h2>
+  <p>Ever wondered how a legal document really feels? With <strong>Synergy Spheres 3.0</strong>, you're just a click away from discovering the sentiment behind legal texts. Whether it’s a court ruling, contract clause, or a policy brief, this tool helps you instantly detect tone—positive, negative, or neutral.</p>
+  <p>It’s designed with law firms, legal-tech teams, and researchers in mind—so if you’re looking to uncover insights hidden in legal language, you’re in the right place. Give it a try and make your legal analysis more intuitive and data-driven.</p>
+</section>
+
+
+  <footer>
+    © 2025 Synergy Spheres 3.0 · LegalFlow AI Suite · <a href="https://github.com/Basytism/LegalFlow_Ai_Suite" target="_blank">GitHub Repository</a>
+  </footer>
+
+  <script>
+    async function analyzeSentiment() {
+      const input = document.getElementById('legalInput').value;
+      const resultDiv = document.getElementById('result');
+      if (!input.trim()) {
+        resultDiv.innerText = '❗ Please enter a legal sentence.';
+        return;
+      }
+      resultDiv.innerText = '🔄 Analyzing...';
+
+      // Simulated prediction (replace with API call or local model connection)
+      setTimeout(() => {
+        const sentiments = ['positive', 'negative', 'neutral'];
+        const prediction = sentiments[Math.floor(Math.random() * sentiments.length)];
+        resultDiv.innerText = `📈 Predicted Sentiment: ${prediction.toUpperCase()}`;
+      }, 1200);
+    }
+  </script>
+</body>
+</html>

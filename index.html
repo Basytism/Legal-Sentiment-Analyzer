@@ -167,7 +167,77 @@
     }
   </style>
 </head>
+<body><!-- Updated LegalFlow HTML with background shapes, chatbot icon, and polished SPA-ready design -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>LegalFlow | Home</title>
+  <link rel="icon" href="https://cdn-icons-png.flaticon.com/512/3103/3103446.png" type="image/png">
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@600&family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+  <link href="https://unpkg.com/aos@2.3.4/dist/aos.css" rel="stylesheet">
+  <script src="https://unpkg.com/aos@2.3.4/dist/aos.js"></script>
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      font-family: 'Roboto', sans-serif;
+      background: linear-gradient(145deg, #1b1f27, #11131a);
+      color: #fff;
+      overflow-x: hidden;
+      position: relative;
+    }
+    body::before {
+      content: "";
+      position: absolute;
+      top: -100px;
+      left: -100px;
+      width: 400px;
+      height: 400px;
+      background: radial-gradient(circle, rgba(0,255,225,0.05), transparent);
+      z-index: 0;
+      border-radius: 50%;
+    }
+    .floating-chatbot {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      z-index: 1000;
+      background: #00ffe1;
+      padding: 12px;
+      border-radius: 50%;
+      box-shadow: 0 0 10px rgba(0,255,225,0.6);
+      cursor: pointer;
+      transition: transform 0.3s ease;
+    }
+    .floating-chatbot:hover {
+      transform: scale(1.1);
+    }
+    .floating-chatbot img {
+      width: 32px;
+      height: 32px;
+    }
+  </style>
+</head>
 <body>
+  <!-- Decorative SVG Wave -->
+  <svg style="position:absolute; top:0; left:0; width:100%; height:80px;" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 320"><path fill="#00ffe1" fill-opacity="0.05" d="M0,128L60,112C120,96,240,64,360,74.7C480,85,600,139,720,138.7C840,139,960,85,1080,74.7C1200,64,1320,96,1380,112L1440,128L1440,0L1380,0C1320,0,1200,0,1080,0C960,0,840,0,720,0C600,0,480,0,360,0C240,0,120,0,60,0L0,0Z"></path></svg>
+
+  <!-- Existing content -->
+  <!-- ... -->
+
+  <!-- Floating Chatbot Icon -->
+  <div class="floating-chatbot" onclick="window.location.href='https://t.me/LegalFlowBot'" title="Chat with LegalFlow Assistant">
+    <img src="https://cdn-icons-png.flaticon.com/512/4712/4712027.png" alt="Chatbot">
+  </div>
+
+  <script>
+    AOS.init({ once: true });
+  </script>
+</body>
+</html>
+
   <header>
     <div class="logo">LegalFlow</div>
     <nav>

@@ -2,157 +2,203 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <meta name="description" content="LegalFlow Dashboard by Synergy Spheres 3.0 - View legal sentiment insights and visualizations." />
-  <title>LegalFlow | Dashboard</title>
-  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@600&family=Roboto&display=swap" rel="stylesheet">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>LegalFlow Analyzer – Synergy Spheres 3.0</title>
+  
+  <!-- Fonts and Icons -->
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@600&family=Inter&display=swap" rel="stylesheet">
+  
+  <!-- External Libraries -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.12.313/pdf.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mammoth/mammoth.browser.min.js"></script>
+
   <style>
     body {
-      font-family: 'Roboto', sans-serif;
-      background-color: var(--bg-color, #1b1f27);
-      color: var(--text-color, #fff);
-      margin: 0;
-      padding: 0;
+      background-color: #111;
+      color: #eee;
+      font-family: 'Inter', sans-serif;
     }
-    header, footer {
-      background-color: #0e1117;
-      padding: 1rem 2rem;
+    header {
+      background-color: #1a1a2e;
+      padding: 1rem 0;
+      text-align: center;
       color: #00ffe1;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
+      font-family: 'Orbitron', sans-serif;
     }
-    nav a {
-      color: #00ffe1;
-      margin-left: 1.5rem;
-      text-decoration: none;
-    }
-    nav a:hover {
-      text-decoration: underline;
-    }
-    main {
-      max-width: 1000px;
+    .container {
+      max-width: 860px;
       margin: 2rem auto;
-      background-color: #22252f;
-      padding: 2rem;
-      border-radius: 10px;
-      box-shadow: 0 0 10px rgba(0,255,225,0.1);
     }
-    h1 {
-      color: #00ffe1;
-      font-size: 1.8rem;
-      margin-bottom: 1rem;
+    .file-label {
+      font-weight: bold;
+    }
+    .card {
+      background-color: #1e1e2f;
+      border: none;
+      border-radius: 12px;
+      padding: 1.5rem;
+      margin-top: 2rem;
+    }
+    .btn-custom {
+      background-color: #00ffe1;
+      color: #000;
+      font-weight: bold;
+      border-radius: 6px;
+      margin-top: 1rem;
     }
     canvas {
+      display: none;
       margin-top: 2rem;
-      background: #fff;
-      border-radius: 10px;
     }
-    .controls {
-      margin-top: 1rem;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
+    #insightBox {
+      margin-top: 30px;
+      background: #2b2b3b;
+      padding: 1rem 1.5rem;
+      border-radius: 8px;
+      color: #ccc;
     }
-    .controls select {
-      padding: 0.5rem;
+    footer {
+      text-align: center;
+      color: #888;
       font-size: 0.9rem;
-      border-radius: 5px;
-    }
-    .controls label {
-      margin-right: 0.5rem;
+      margin: 3rem 0 1rem;
     }
   </style>
 </head>
 <body>
-  <header>
-    <div class="logo">LegalFlow</div>
-    <nav>
-      <a href="index.html">Home</a>
-      <a href="upload.html">Upload</a>
-      <a href="dashboard.html">Dashboard</a>
-      <a href="about.html">About</a>
-    </nav>
-  </header>
 
-  <main>
-    <h1>📊 Sentiment Dashboard</h1>
-    <div class="controls">
-      <div>
-        <label for="themeToggle">🎨 Theme:</label>
-        <select id="themeToggle" onchange="switchTheme()">
-          <option value="default">Default</option>
-          <option value="corporate">Corporate</option>
-          <option value="legal">Legal-Tech</option>
-        </select>
-      </div>
-      <div>
-        <label for="langToggle">🌍 Language:</label>
-        <select id="langToggle" onchange="switchLang()">
-          <option value="en">English</option>
-          <option value="fr">Français</option>
-          <option value="ur">اردو</option>
-        </select>
-      </div>
-    </div>
-    <p id="desc">This dashboard shows aggregated sentiment analysis results for uploaded legal documents.</p>
-    <canvas id="sentimentChart" width="400" height="200"></canvas>
-  </main>
+<header>
+  <h1>LegalFlow Analyzer</h1>
+  <p class="lead">AI-Driven Sentiment Evaluation for Legal Documents</p>
+</header>
 
-  <footer>
-    <div>© 2025 LegalFlow · Synergy Spheres 3.0</div>
-    <div>
-      <a href="https://github.com/Basytism/legal-sentiment-analyzer">GitHub</a>
-    </div>
-  </footer>
+<div class="container">
+  <label for="fileUpload" class="form-label file-label">📁 Upload CSV, PDF, or DOCX Legal File</label>
+  <input type="file" id="fileUpload" class="form-control mb-3" accept=".csv,.pdf,.docx">
+  
+  <div id="output"></div>
+  <button id="analyzeBtn" class="btn btn-custom" style="display:none">▶️ Run Sentiment Analysis</button>
+  <canvas id="sentimentChart" width="400" height="200"></canvas>
+  <div id="insightBox"></div>
+</div>
 
-  <script>
-    const themes = {
-      default: { '--bg-color': '#1b1f27', '--text-color': '#ffffff' },
-      corporate: { '--bg-color': '#f4f4f4', '--text-color': '#111' },
-      legal: { '--bg-color': '#14191f', '--text-color': '#00ffe1' }
-    };
+<footer>🔐 Powered by Synergy Spheres 3.0 – Legal AI Tools</footer>
 
-    function switchTheme() {
-      const selected = document.getElementById('themeToggle').value;
-      const root = document.documentElement;
-      const vars = themes[selected];
-      for (let key in vars) {
-        root.style.setProperty(key, vars[key]);
-      }
-    }
+<script>
+let extractedText = "";
 
-    const langDict = {
-      en: "This dashboard shows aggregated sentiment analysis results for uploaded legal documents.",
-      fr: "Ce tableau de bord affiche les résultats d'analyse de sentiment pour les documents juridiques téléchargés.",
-      ur: "یہ ڈیش بورڈ اپ لوڈ کردہ قانونی دستاویزات کے جذباتی تجزیے کے نتائج دکھاتا ہے۔"
-    };
+function displayTextResult(text) {
+  extractedText = text;
+  const lines = text.split(/\n|\.|\r/).filter(line => line.trim().length > 20);
+  let html = '<div class="card"><h5>🔍 Extracted Sentences</h5><ul>';
+  lines.slice(0, 10).forEach(line => {
+    html += `<li>${line.trim()}</li>`;
+  });
+  html += '</ul></div>';
+  document.getElementById('output').innerHTML = html;
+  document.getElementById('analyzeBtn').style.display = 'block';
+  document.getElementById('sentimentChart').style.display = 'none';
+  document.getElementById('insightBox').innerText = "Text extracted. Click 'Run Sentiment Analysis' to process.";
+}
 
-    function switchLang() {
-      const selected = document.getElementById('langToggle').value;
-      document.getElementById('desc').innerText = langDict[selected];
-    }
+document.getElementById('fileUpload').addEventListener('change', function(e) {
+  const file = e.target.files[0];
+  if (!file) return;
 
-    const ctx = document.getElementById('sentimentChart').getContext('2d');
-    const chart = new Chart(ctx, {
-      type: 'bar',
-      data: {
-        labels: ['Positive', 'Negative', 'Neutral'],
-        datasets: [{
-          label: 'Sentiment Count',
-          data: [22, 13, 7],
-          backgroundColor: ['#00bfa6', '#ff4c4c', '#ffc107']
-        }]
-      },
-      options: {
-        responsive: true,
-        plugins: {
-          legend: { display: false },
-          title: { display: true, text: 'Sentiment Overview' }
-        }
-      }
+  const extension = file.name.split('.').pop().toLowerCase();
+  if (extension === 'csv') handleCSV(file);
+  else if (extension === 'pdf') handlePDF(file);
+  else if (extension === 'docx') handleDOCX(file);
+  else alert("Unsupported file type.");
+});
+
+document.getElementById('analyzeBtn').addEventListener('click', function() {
+  fetch('http://localhost:8000/analyze', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ text: extractedText })
+  })
+  .then(res => res.json())
+  .then(data => {
+    let pos = 0, neg = 0, neu = 0;
+    let html = '<div class="card"><h5>📊 Sentiment Results</h5><table class="table table-striped mt-3"><thead><tr><th>Text</th><th>Label</th></tr></thead><tbody>';
+    data.results.forEach(item => {
+      const label = item.label.toLowerCase();
+      if (label === 'positive') pos++;
+      else if (label === 'negative') neg++;
+      else neu++;
+      html += `<tr><td>${item.text}</td><td>${label}</td></tr>`;
     });
-  </script>
+    html += '</tbody></table></div>';
+    document.getElementById('output').innerHTML = html;
+    renderChart(pos, neg, neu);
+  });
+});
+
+function handlePDF(file) {
+  const reader = new FileReader();
+  reader.onload = function() {
+    const typedarray = new Uint8Array(reader.result);
+    pdfjsLib.getDocument(typedarray).promise.then(pdf => {
+      let textContent = "";
+      const pagePromises = [];
+      for (let i = 1; i <= Math.min(pdf.numPages, 5); i++) {
+        pagePromises.push(pdf.getPage(i).then(page => page.getTextContent()));
+      }
+      Promise.all(pagePromises).then(pages => {
+        pages.forEach(content => {
+          textContent += content.items.map(i => i.str).join(" ") + "\n";
+        });
+        displayTextResult(textContent);
+      });
+    });
+  };
+  reader.readAsArrayBuffer(file);
+}
+
+function handleDOCX(file) {
+  const reader = new FileReader();
+  reader.onload = function(event) {
+    mammoth.extractRawText({ arrayBuffer: event.target.result })
+      .then(result => displayTextResult(result.value));
+  };
+  reader.readAsArrayBuffer(file);
+}
+
+function handleCSV(file) {
+  const reader = new FileReader();
+  reader.onload = function(event) {
+    const text = event.target.result;
+    displayTextResult(text);
+  };
+  reader.readAsText(file);
+}
+
+function renderChart(positive, negative, neutral) {
+  const ctx = document.getElementById('sentimentChart').getContext('2d');
+  document.getElementById("sentimentChart").style.display = "block";
+
+  new Chart(ctx, {
+    type: 'bar',
+    data: {
+      labels: ['Positive', 'Negative', 'Neutral'],
+      datasets: [{
+        label: 'Sentiment Count',
+        data: [positive, negative, neutral],
+        backgroundColor: ['#28a745', '#dc3545', '#ffc107']
+      }]
+    },
+    options: {
+      responsive: true,
+      scales: { y: { beginAtZero: true } }
+    }
+  });
+
+  document.getElementById("insightBox").innerText = `Detected ${positive} positive, ${negative} negative, and ${neutral} neutral statements. Overall tone: ${(positive > negative ? 'positive' : (negative > positive ? 'critical' : 'neutral'))}.`;
+}
+</script>
+
 </body>
 </html>

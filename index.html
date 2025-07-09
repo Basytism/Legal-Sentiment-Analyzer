@@ -200,9 +200,9 @@
     </section>
 
    <section class="testimonial">
-  <h2>📢 What Our Users Say</h2>
+  <h2><img src="https://cdn-icons-png.flaticon.com/512/4767/4767444.png" alt="testimonial icon" style="width: 28px; vertical-align: middle; margin-right: 8px;" />What Our Users Say</h2>
 
-  <div class="testimonial-carousel" style="display: flex; overflow-x: auto; scroll-snap-type: x mandatory; gap: 2rem; padding-bottom: 1rem;">
+  <div id="carousel" class="testimonial-carousel" style="display: flex; overflow-x: auto; scroll-snap-type: x mandatory; gap: 2rem; padding-bottom: 1rem; scroll-behavior: smooth;">
     <div style="flex: 0 0 80%; scroll-snap-align: start; background-color: #22252f; border-radius: 10px; padding: 1rem; min-width: 280px;">
       <div style="display: flex; align-items: flex-start; gap: 1.5rem;">
         <img src="https://i.pravatar.cc/60?img=12" alt="Sarah R." style="border-radius: 50%; width: 60px; height: 60px;" />
@@ -233,6 +233,20 @@
       </div>
     </div>
   </div>
+
+  <div style="text-align: center; margin-top: 1rem;">
+    <button onclick="scrollTestimonials(-1)" style="background-color: #00ffe1; color: #000; border: none; padding: 0.5rem 1rem; margin: 0 0.5rem; border-radius: 5px; cursor: pointer;">◀️</button>
+    <button onclick="scrollTestimonials(1)" style="background-color: #00ffe1; color: #000; border: none; padding: 0.5rem 1rem; margin: 0 0.5rem; border-radius: 5px; cursor: pointer;">▶️</button>
+  </div>
+
+  <script>
+    let carousel = document.getElementById('carousel');
+    let scrollInterval = setInterval(() => carousel.scrollBy({ left: 300, behavior: 'smooth' }), 4000);
+
+    function scrollTestimonials(direction) {
+      carousel.scrollBy({ left: direction * 300, behavior: 'smooth' });
+    }
+  </script>
 
   <div class="trust-badges" style="margin-top: 2rem; display: flex; gap: 2rem; justify-content: center; flex-wrap: wrap;">
     <img src="https://img.shields.io/badge/GDPR-Compliant-brightgreen" alt="GDPR Badge" />

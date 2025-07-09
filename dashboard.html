@@ -6,11 +6,12 @@
   <meta name="description" content="LegalFlow Dashboard by Synergy Spheres 3.0 - View legal sentiment insights and visualizations." />
   <title>LegalFlow | Dashboard</title>
   <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@600&family=Roboto&display=swap" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <style>
     body {
       font-family: 'Roboto', sans-serif;
-      background-color: #1b1f27;
-      color: #fff;
+      background-color: var(--bg-color, #1b1f27);
+      color: var(--text-color, #fff);
       margin: 0;
       padding: 0;
     }
@@ -48,6 +49,20 @@
       background: #fff;
       border-radius: 10px;
     }
+    .controls {
+      margin-top: 1rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .controls select {
+      padding: 0.5rem;
+      font-size: 0.9rem;
+      border-radius: 5px;
+    }
+    .controls label {
+      margin-right: 0.5rem;
+    }
   </style>
 </head>
 <body>
@@ -63,7 +78,25 @@
 
   <main>
     <h1>📊 Sentiment Dashboard</h1>
-    <p>This dashboard shows aggregated sentiment analysis results for uploaded legal documents.</p>
+    <div class="controls">
+      <div>
+        <label for="themeToggle">🎨 Theme:</label>
+        <select id="themeToggle" onchange="switchTheme()">
+          <option value="default">Default</option>
+          <option value="corporate">Corporate</option>
+          <option value="legal">Legal-Tech</option>
+        </select>
+      </div>
+      <div>
+        <label for="langToggle">🌍 Language:</label>
+        <select id="langToggle" onchange="switchLang()">
+          <option value="en">English</option>
+          <option value="fr">Français</option>
+          <option value="ur">اردو</option>
+        </select>
+      </div>
+    </div>
+    <p id="desc">This dashboard shows aggregated sentiment analysis results for uploaded legal documents.</p>
     <canvas id="sentimentChart" width="400" height="200"></canvas>
   </main>
 
@@ -74,8 +107,33 @@
     </div>
   </footer>
 
-  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <script>
+    const themes = {
+      default: { '--bg-color': '#1b1f27', '--text-color': '#ffffff' },
+      corporate: { '--bg-color': '#f4f4f4', '--text-color': '#111' },
+      legal: { '--bg-color': '#14191f', '--text-color': '#00ffe1' }
+    };
+
+    function switchTheme() {
+      const selected = document.getElementById('themeToggle').value;
+      const root = document.documentElement;
+      const vars = themes[selected];
+      for (let key in vars) {
+        root.style.setProperty(key, vars[key]);
+      }
+    }
+
+    const langDict = {
+      en: "This dashboard shows aggregated sentiment analysis results for uploaded legal documents.",
+      fr: "Ce tableau de bord affiche les résultats d'analyse de sentiment pour les documents juridiques téléchargés.",
+      ur: "یہ ڈیش بورڈ اپ لوڈ کردہ قانونی دستاویزات کے جذباتی تجزیے کے نتائج دکھاتا ہے۔"
+    };
+
+    function switchLang() {
+      const selected = document.getElementById('langToggle').value;
+      document.getElementById('desc').innerText = langDict[selected];
+    }
+
     const ctx = document.getElementById('sentimentChart').getContext('2d');
     const chart = new Chart(ctx, {
       type: 'bar',

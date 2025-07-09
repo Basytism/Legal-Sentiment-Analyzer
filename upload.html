@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Upload legal documents for sentiment analysis using LegalFlow by Synergy Spheres 3.0" />
+  <title>LegalFlow | Upload</title>
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@600&family=Roboto&display=swap" rel="stylesheet">
+  <style>
+    body {
+      font-family: 'Roboto', sans-serif;
+      background-color: #1b1f27;
+      color: #fff;
+      margin: 0;
+      padding: 0;
+    }
+    header, footer {
+      background-color: #0e1117;
+      padding: 1rem 2rem;
+      color: #00ffe1;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    nav a {
+      color: #00ffe1;
+      margin-left: 1.5rem;
+      text-decoration: none;
+    }
+    nav a:hover {
+      text-decoration: underline;
+    }
+    main {
+      max-width: 800px;
+      margin: 2rem auto;
+      background-color: #22252f;
+      padding: 2rem;
+      border-radius: 10px;
+      box-shadow: 0 0 10px rgba(0,255,225,0.1);
+    }
+    h1 {
+      color: #00ffe1;
+      font-size: 1.8rem;
+      margin-bottom: 1rem;
+    }
+    .upload-area input[type="file"] {
+      display: block;
+      margin-top: 1rem;
+    }
+    .result {
+      margin-top: 1rem;
+      color: #ccc;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="logo">LegalFlow</div>
+    <nav>
+      <a href="index.html">Home</a>
+      <a href="upload.html">Upload</a>
+      <a href="dashboard.html">Dashboard</a>
+      <a href="about.html">About</a>
+    </nav>
+  </header>
+
+  <main>
+    <h1>📁 Upload Legal Documents</h1>
+    <p>Upload your .csv, .txt, or .pdf legal documents to begin sentiment analysis.</p>
+    <div class="upload-area">
+      <label>Choose File:
+        <input type="file" accept=".csv,.txt,.pdf">
+      </label>
+      <div class="result">Status: Awaiting upload...</div>
+    </div>
+  </main>
+
+  <footer>
+    <div>© 2025 LegalFlow · Synergy Spheres 3.0</div>
+    <div>
+      <a href="https://github.com/Basytism/legal-sentiment-analyzer">GitHub</a>
+    </div>
+  </footer>
+</body>
+</html>

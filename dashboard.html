@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="LegalFlow Dashboard by Synergy Spheres 3.0 - View legal sentiment insights and visualizations." />
+  <title>LegalFlow | Dashboard</title>
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@600&family=Roboto&display=swap" rel="stylesheet">
+  <style>
+    body {
+      font-family: 'Roboto', sans-serif;
+      background-color: #1b1f27;
+      color: #fff;
+      margin: 0;
+      padding: 0;
+    }
+    header, footer {
+      background-color: #0e1117;
+      padding: 1rem 2rem;
+      color: #00ffe1;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    nav a {
+      color: #00ffe1;
+      margin-left: 1.5rem;
+      text-decoration: none;
+    }
+    nav a:hover {
+      text-decoration: underline;
+    }
+    main {
+      max-width: 1000px;
+      margin: 2rem auto;
+      background-color: #22252f;
+      padding: 2rem;
+      border-radius: 10px;
+      box-shadow: 0 0 10px rgba(0,255,225,0.1);
+    }
+    h1 {
+      color: #00ffe1;
+      font-size: 1.8rem;
+      margin-bottom: 1rem;
+    }
+    canvas {
+      margin-top: 2rem;
+      background: #fff;
+      border-radius: 10px;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="logo">LegalFlow</div>
+    <nav>
+      <a href="index.html">Home</a>
+      <a href="upload.html">Upload</a>
+      <a href="dashboard.html">Dashboard</a>
+      <a href="about.html">About</a>
+    </nav>
+  </header>
+
+  <main>
+    <h1>📊 Sentiment Dashboard</h1>
+    <p>This dashboard shows aggregated sentiment analysis results for uploaded legal documents.</p>
+    <canvas id="sentimentChart" width="400" height="200"></canvas>
+  </main>
+
+  <footer>
+    <div>© 2025 LegalFlow · Synergy Spheres 3.0</div>
+    <div>
+      <a href="https://github.com/Basytism/legal-sentiment-analyzer">GitHub</a>
+    </div>
+  </footer>
+
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script>
+    const ctx = document.getElementById('sentimentChart').getContext('2d');
+    const chart = new Chart(ctx, {
+      type: 'bar',
+      data: {
+        labels: ['Positive', 'Negative', 'Neutral'],
+        datasets: [{
+          label: 'Sentiment Count',
+          data: [22, 13, 7],
+          backgroundColor: ['#00bfa6', '#ff4c4c', '#ffc107']
+        }]
+      },
+      options: {
+        responsive: true,
+        plugins: {
+          legend: { display: false },
+          title: { display: true, text: 'Sentiment Overview' }
+        }
+      }
+    });
+  </script>
+</body>
+</html>

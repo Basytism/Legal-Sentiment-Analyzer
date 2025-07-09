@@ -1,0 +1,156 @@
+<!-- Full working analyzer.html with backend button trigger -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>LegalFlow Analyzer – Synergy Spheres 3.0</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@600&family=Inter&display=swap" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.12.313/pdf.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mammoth/mammoth.browser.min.js"></script>
+  <style>
+    body { background-color: #111; color: #eee; font-family: 'Inter', sans-serif; }
+    header { background-color: #1a1a2e; padding: 1rem 0; text-align: center; color: #00ffe1; font-family: 'Orbitron', sans-serif; }
+    .container { max-width: 860px; margin: 2rem auto; }
+    .file-label { font-weight: bold; }
+    .card { background-color: #1e1e2f; border: none; border-radius: 12px; padding: 1.5rem; margin-top: 2rem; }
+    .btn-custom { background-color: #00ffe1; color: #000; font-weight: bold; border-radius: 6px; margin-top: 1rem; }
+    table { color: #fff; }
+    th, td { border-color: #333 !important; }
+    footer { text-align: center; color: #888; font-size: 0.9rem; margin: 3rem 0 1rem; }
+    #insightBox { margin-top: 30px; background: #2b2b3b; padding: 1rem 1.5rem; border-radius: 8px; color: #ccc; }
+  </style>
+</head>
+<body>
+
+<header>
+  <h1>LegalFlow Analyzer</h1>
+  <p class="lead">AI-Driven Sentiment Evaluation for Legal Documents</p>
+</header>
+
+<div class="container">
+  <label for="fileUpload" class="form-label file-label">📁 Upload CSV, PDF, or DOCX Legal File</label>
+  <input type="file" id="fileUpload" class="form-control mb-3" accept=".csv,.pdf,.docx">
+  <div id="output"></div>
+  <button id="analyzeBtn" class="btn btn-custom" style="display:none">▶️ Run Sentiment Analysis</button>
+  <canvas id="sentimentChart" width="400" height="200"></canvas>
+  <div id="insightBox"></div>
+</div>
+
+<footer>🔐 Powered by Synergy Spheres 3.0 – Legal AI Tools</footer>
+
+<script>
+let extractedText = "";
+
+function displayTextResult(text) {
+  extractedText = text;
+  const lines = text.split(/\n|\.|\r/).filter(line => line.trim().length > 20);
+  let html = '<div class="card"><h5>🔍 Extracted Sentences</h5><ul>';
+  for (let i = 0; i < Math.min(lines.length, 10); i++) {
+    html += `<li>${lines[i].trim()}</li>`;
+  }
+  html += '</ul></div>';
+  document.getElementById('output').innerHTML = html;
+  document.getElementById('analyzeBtn').style.display = 'block';
+  document.getElementById('sentimentChart').style.display = 'none';
+  document.getElementById('insightBox').innerText = "Text extracted. Click 'Run Sentiment Analysis' to process.";
+}
+
+document.getElementById('fileUpload').addEventListener('change', function(e) {
+  const file = e.target.files[0];
+  if (!file) return;
+
+  const extension = file.name.split('.').pop().toLowerCase();
+  if (extension === 'csv') {
+    handleCSV(file);
+  } else if (extension === 'pdf') {
+    handlePDF(file);
+  } else if (extension === 'docx') {
+    handleDOCX(file);
+  } else {
+    alert("Unsupported file type.");
+  }
+});
+
+document.getElementById('analyzeBtn').addEventListener('click', function() {
+  fetch('http://localhost:8000/analyze', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ text: extractedText })
+  })
+  .then(res => res.json())
+  .then(data => {
+    let pos = 0, neg = 0, neu = 0;
+    let html = '<div class="card"><h5>📊 Sentiment Results</h5><table class="table table-striped mt-3"><thead><tr><th>Text</th><th>Label</th></tr></thead><tbody>';
+    data.results.forEach(item => {
+      const label = item.label.toLowerCase();
+      if (label === 'positive') pos++; else if (label === 'negative') neg++; else neu++;
+      html += `<tr><td>${item.text}</td><td>${label}</td></tr>`;
+    });
+    html += '</tbody></table></div>';
+    document.getElementById('output').innerHTML = html;
+    renderChart(pos, neg, neu);
+  });
+});
+
+function handlePDF(file) {
+  const reader = new FileReader();
+  reader.onload = function() {
+    const typedarray = new Uint8Array(reader.result);
+    pdfjsLib.getDocument(typedarray).promise.then(pdf => {
+      let textContent = "";
+      const pagePromises = [];
+      for (let i = 1; i <= Math.min(pdf.numPages, 5); i++) {
+        pagePromises.push(pdf.getPage(i).then(page => page.getTextContent()));
+      }
+      Promise.all(pagePromises).then(pages => {
+        pages.forEach(content => {
+          textContent += content.items.map(i => i.str).join(" ") + "\n";
+        });
+        displayTextResult(textContent);
+      });
+    });
+  };
+  reader.readAsArrayBuffer(file);
+}
+
+function handleDOCX(file) {
+  const reader = new FileReader();
+  reader.onload = function(event) {
+    mammoth.extractRawText({ arrayBuffer: event.target.result })
+      .then(result => displayTextResult(result.value));
+  };
+  reader.readAsArrayBuffer(file);
+}
+
+function handleCSV(file) {
+  const reader = new FileReader();
+  reader.onload = function(event) {
+    const text = event.target.result;
+    displayTextResult(text);
+  };
+  reader.readAsText(file);
+}
+
+function renderChart(positive, negative, neutral) {
+  const ctx = document.getElementById('sentimentChart').getContext('2d');
+  new Chart(ctx, {
+    type: 'bar',
+    data: {
+      labels: ['Positive', 'Negative', 'Neutral'],
+      datasets: [{
+        label: 'Sentiment Count',
+        data: [positive, negative, neutral],
+        backgroundColor: ['#28a745', '#dc3545', '#ffc107']
+      }]
+    },
+    options: { scales: { y: { beginAtZero: true } } }
+  });
+  document.getElementById("insightBox").innerText = `Detected ${positive} positive, ${negative} negative, and ${neutral} neutral statements. Overall tone: ${(positive > negative ? 'positive' : (negative > positive ? 'critical' : 'neutral'))}.`;
+}
+</script>
+
+</body>
+</html>
